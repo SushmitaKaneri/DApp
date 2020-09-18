@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+        <script src="abi.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <script>
+            var web3 = new Web3("http://127.0.0.1:8545/");
+            web3 = new Web3(web3.currentProvider);
+            var contractAddress = "0x05d17295296d66701bF94C30E1625cDbF0F37D69";
+            var contract =  new web3.eth.Contract(abi,contractAddress);
+            
+            //Invoke Store
+            var user_input = prompt("Enter a Value to store on Blockchain", "0");
+            var int_user_input = parseInt(user_input); 
+            web3.eth.getAccounts().then(function(res){
+                contract.methods.store(int_user_input).send({from:res[0]}).then(function(res){
+                console.log(res)
+                }).catch(function(err){
+                console.log(err)});
+            })     
+            
+            //Invoke retrieve
+            function getValue(){
+                    contract.methods.retreive().call().then(function(res){
+                        document.getElementById('data').innerHTML = res[0]
+                    });
+                    
+                }
+            
+        </script>
+        <center>     
+        <div class="container">
+            <h2>Fetching Data from Blockchain</h2>
+            <p id="data"></p>
+            <button class="button" onclick="getValue()">Fetch</button>
+           
+        </div>
+        </center>
+    </body>
+</html>
